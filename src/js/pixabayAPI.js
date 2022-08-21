@@ -20,11 +20,15 @@ export default class PixabayAPI {
     try {
       const response = await axios.get(url);
       console.log(response);
-      this.page += 1;
+      this.incrementPage();
       return response.data;
     } catch (error) {
       console.log(error.message);
     }
+  }
+
+  incrementPage() {
+    this.page += 1;
   }
 
   updatePage() {

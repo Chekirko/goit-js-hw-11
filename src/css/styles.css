@@ -54,6 +54,10 @@ button:hover {
    margin-top: 15px;
 }
 
+.load-more.is-hidden {
+    display: none;
+}
+
 .icon {
     position: absolute;
     top: 4px;

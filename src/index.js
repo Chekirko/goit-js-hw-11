@@ -39,9 +39,14 @@ async function onFormSubmit(evt) {
         'Sorry, there are no images matching your search query. Please try again.'
       );
       return;
+    } else if (response.totalHits <= 40) {
+      Notiflix.Notify.success(`Hooray! We found ${response.totalHits} images.`);
+      renderMarkup(response.hits);
+      return;
     } else {
       Notiflix.Notify.success(`Hooray! We found ${response.totalHits} images.`);
       renderMarkup(response.hits);
+      refs.btn.classList.remove('is-hidden');
     }
   } catch (error) {
     console.log(error);
@@ -49,7 +54,20 @@ async function onFormSubmit(evt) {
 }
 
 async function onBtnClick(evt) {
-  await pixabayAPI.getImages();
+  try {
+    const response = await pixabayAPI.getImages();
+    if (response.totalHits >= (pixabayAPI.page - 1) * pixabayAPI.per_page) {
+      renderMarkup(response.hits);
+    } else {
+      renderMarkup(response.hits);
+      refs.btn.classList.add('is-hidden');
+      Notiflix.Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
+  } catch {
+    console.log(error);
+  }
 }
 
 function renderMarkup(images) {
