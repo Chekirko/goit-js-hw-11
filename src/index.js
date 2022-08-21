@@ -14,6 +14,9 @@ const refs = {
 refs.form.addEventListener('submit', onFormSubmit);
 refs.btn.addEventListener('click', onBtnClick);
 
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+});
 const pixabayAPI = new PixabayAPI();
 
 async function onFormSubmit(evt) {
@@ -46,7 +49,7 @@ async function onFormSubmit(evt) {
 }
 
 async function onBtnClick(evt) {
-  pixabayAPI.getImages(searchQuery);
+  await pixabayAPI.getImages();
 }
 
 function renderMarkup(images) {
@@ -84,7 +87,7 @@ function renderMarkup(images) {
     )
     .join('');
   refs.gallery.insertAdjacentHTML('beforeend', markup);
-  lightboxGallery.refresh();
+  lightbox.refresh();
 }
 
 // fetchImages().then(image => {

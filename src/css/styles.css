@@ -49,9 +49,11 @@ button:hover {
 .load-more {
     width: 80px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+   margin-right: auto;
+   margin-left: auto;
+   margin-top: 15px;
 }
+
 .icon {
     position: absolute;
     top: 4px;
