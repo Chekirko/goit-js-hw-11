@@ -20,35 +20,71 @@ async function onFormSubmit(evt) {
   evt.preventDefault();
   refs.gallery.innerHTML = '';
   pixabayAPI.query = evt.currentTarget.elements.searchQuery.value.trim();
-  pixabayAPI.getImages();
+  pixabayAPI.updatePage();
+
+  try {
+    if (!pixabayAPI.query) {
+      refs.gallery.innerHTML = '';
+      Notify.failure('Sorry, enter the query');
+      return;
+    }
+
+    const response = await pixabayAPI.getImages();
+
+    if (response.totalHits === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    } else {
+      Notify.success(`Hooray! We found ${response.totalHits} images.`);
+      renderMarkup(response.hits);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function onBtnClick(evt) {
   pixabayAPI.getImages(searchQuery);
 }
+
 function renderMarkup(images) {
   const markup = images
-    .map(image => {
-      return `<div class="photo-card">
-  <img src="" alt="" loading="lazy" />
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b>
-    </p>
-    <p class="info-item">
-      <b>Views</b>
-    </p>
-    <p class="info-item">
-      <b>Comments</b>
-    </p>
-    <p class="info-item">
-      <b>Downloads</b>
-    </p>
-  </div>
-</div>`;
-    })
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+        return `<div class="photo-card">
+                    <a class="photo-link" href="${largeImageURL}">  
+                    <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+                    </a>
+                    <div class="info">
+                      <p class="info-item">
+                        <b>Likes</b> ${likes}
+                      </p>
+                      <p class="info-item">
+                        <b>Views</b> ${views}
+                      </p>
+                      <p class="info-item">
+                        <b>Comments</b> ${comments}
+                      </p>
+                      <p class="info-item">
+                        <b>Downloads</b> ${downloads}
+                      </p>
+                    </div>
+                </div>`;
+      }
+    )
     .join('');
-  refs.gallery.innerHTML = markup;
+  refs.gallery.insertAdjacentHTML('beforeend', markup);
+  lightboxGallery.refresh();
 }
 
 // fetchImages().then(image => {

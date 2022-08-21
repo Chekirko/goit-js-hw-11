@@ -2,6 +2,8 @@ import axios from 'axios';
 export default class PixabayAPI {
   constructor() {
     this.searchQuery = '';
+    this.page = 1;
+    this.per_page = 40;
   }
 
   BASE_URL = 'https://pixabay.com/api/';
@@ -14,15 +16,19 @@ export default class PixabayAPI {
   });
 
   async getImages() {
-    const url = `${this.BASE_URL}?key=${this.API_KEY}&q=${this.searchQuery}&${this.searchParams}&page=1&per_page=40`;
+    const url = `${this.BASE_URL}?key=${this.API_KEY}&q=${this.searchQuery}&${this.searchParams}&page=${this.page}&per_page=${this.per_page}`;
     try {
       const response = await axios.get(url);
-
-      const images = response.json();
-      return images;
+      console.log(response);
+      this.page += 1;
+      return response.data;
     } catch (error) {
-      return error;
+      console.log(error.message);
     }
+  }
+
+  updatePage() {
+    this.page = 1;
   }
 
   get query() {
