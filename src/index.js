@@ -25,19 +25,19 @@ async function onFormSubmit(evt) {
   try {
     if (!pixabayAPI.query) {
       refs.gallery.innerHTML = '';
-      Notify.failure('Sorry, enter the query');
+      Notiflix.Notify.failure('Sorry, enter the query');
       return;
     }
 
     const response = await pixabayAPI.getImages();
 
     if (response.totalHits === 0) {
-      Notify.failure(
+      Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
       return;
     } else {
-      Notify.success(`Hooray! We found ${response.totalHits} images.`);
+      Notiflix.Notify.success(`Hooray! We found ${response.totalHits} images.`);
       renderMarkup(response.hits);
     }
   } catch (error) {
