@@ -1,5 +1,5 @@
 import PixabayAPI from './js/pixabayAPI';
-// import './css/styles.css';
+import './css/styles.css';
 const axios = require('axios').default;
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
